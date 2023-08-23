@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LetsDraw</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+
+  <body>
+    <h1 style="margin: 0px"><b>Paint Your Own Picture</b></h1>
+    <p style="margin: 0px">
+      TIP: Start the cursor from top left corner of the canvas
+    </p>
+    <p>
+      Set width
+      <input type="text" onchange="setWidth(this.value)" />
+
+      Set height
+      <input type="text" onchange="setheight(this.value)" />
+    </p>
+    <canvas
+      id="canvas1"
+      onmousedown="startPaint()"
+      onmousemove="doPaint(event.offsetX,event.offsetY)"
+      onmouseup="endPaint()"
+    ></canvas>
+    <p>
+      Brush Color
+      <input type="color" value="#000" oninput="setColor(this.value)" />
+
+      Brush Size
+      <input
+        type="range"
+        id="sizeInput"
+        value="10"
+        min="5"
+        max="50"
+        oninput="resizeBrush(this.value)"
+      />
+      <output id="sizeOutput"> </output>
+
+      <input
+        type="button"
+        value="CLEAR"
+        onclick="clearCanvas()"
+        id="clear"
+        style="
+          color: white;
+          background-color: black;
+          width: 10vw;
+          height: 3.5vh;
+          font-weight: 700;
+          font-size: large;
+          border-radius: 20px;
+        "
+      />
+    </p>
+
+    <script>
+      var paintcanvas = document.getElementById("canvas1");
+      var context = paintcanvas.getContext("2d");
+      var color = "black";
+      var radius = 3; // Default brush size
+      var isPainting = false;
+
+      // only paint if mouse is being dragged (moved while the button is pressed)
+      function setWidth(value) {
+        var canvas = document.getElementById("canvas1");
+
+        if (isNumeric(value) == true) {
+          canvas.width = value;
+        }
+        // 1330
+      }
+
+      function setheight(value) {
+        var canvas = document.getElementById("canvas1");
+        if (isNumeric(value) == true) {
+          canvas.height = value;
+        }
+        // 700
+      }
+
+      function clearCanvas() {
+        context.clearRect(0, 0, paintcanvas.width, paintcanvas.height);
+      }
+
+      function paintCircle(x, y) {
+        // make sure to start a new circle each time
+        context.beginPath();
+        // draw circle using a complete (2*PI) arc around given point
+        context.arc(x, y, radius, 0, Math.PI * 2, true);
+        context.fillStyle = color;
+        context.fill();
+      }
+
+      // verify the given value is actually a number
+      function isNumeric(value) {
+        // standard JavaScript function to determine whether a string is an illegal number (Not-a-Number)
+        return !isNaN(value);
+      }
+
+      function startPaint() {
+        isPainting = true;
+      }
+
+      function endPaint() {
+        isPainting = false;
+      }
+
+      function doPaint(x, y) {
+        if (isPainting == true) {
+          paintCircle(x, y);
+        }
+      }
+
+      function setColor(newColor) {
+        color = newColor;
+      }
+
+      function resizeBrush(newSize) {
+        radius = newSize;
+        document.getElementById("sizeOutput").value = newSize;
+      }
+    </script>
+  </body>
+</html>
